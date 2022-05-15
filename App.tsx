@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import * as React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,6 +17,7 @@ import {
   Text,
   useColorScheme,
   View,
+  Button,
 } from 'react-native';
 
 import {
@@ -26,6 +27,11 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import SMS from './Views/SMS'
 
 const Section: React.FC<{
   title: string;
@@ -112,4 +118,69 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+// export default App;
+
+
+const HomeScreen = ({ navigation }: { navigation: any}): JSX.Element => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <Header />
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Section title="Step One">
+            Click the button to go to the default page
+            <Button
+              title="Big fat button to tap"
+              onPress={() => 
+                navigation.navigate('tutorial')
+              }
+              />
+          </Section>
+          <Section title="Step Two">
+            Click the button to go to the default page
+            <Button
+              title="Big fat button to snap"
+              onPress={() => 
+                navigation.navigate('SMS')
+              }
+              />
+          </Section>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
+
+
+const Stack = createNativeStackNavigator();
+
+const MyStack = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen name="tutorial" component={App} />
+        <Stack.Screen name="SMS" component={SMS} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+
+export default MyStack;
